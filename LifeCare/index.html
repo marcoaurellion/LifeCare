@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeCare | Registros de Pacientes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <aside class="menu">
+    <div class="logo">
+      <img src="logo.png" alt="LifeCare">
+    </div>
+    <p class="slogan">Cuidado contínuo, história completa.</p>
+
+    <nav>
+      <button class="menu-item ativo" data-tela="inicio" onclick="trocarTela('inicio')">Visão geral</button>
+      <button class="menu-item" data-tela="pacientes" onclick="trocarTela('pacientes')">Pacientes</button>
+      <button class="menu-item" data-tela="prontuarios" onclick="trocarTela('prontuarios')">Prontuários</button>
+      <button class="menu-item" data-tela="tratamentos" onclick="trocarTela('tratamentos')">Tratamentos</button>
+      <button class="menu-item" data-tela="exames" onclick="trocarTela('exames')">Exames</button>
+      <button class="menu-item" data-tela="arquivo" onclick="trocarTela('arquivo')">Arquivo médico</button>
+    </nav>
+
+    <p class="aviso-menu">Protótipo acadêmico com dados fictícios. Os dados ficam salvos neste navegador.</p>
+  </aside>
+
+  <main class="principal">
+    <header class="topo">
+      <div>
+        <span class="etiqueta">HOSPITAL LIFECARE · GOIÂNIA</span>
+        <h1 id="titulo-tela">Visão geral</h1>
+      </div>
+      <button class="botao" onclick="novoPaciente()">Novo paciente</button>
+    </header>
+
+    <section id="tela-inicio" class="tela ativa">
+      <div class="boas-vindas">
+        <h2 id="saudacao"></h2>
+        <p id="data-hoje"></p>
+      </div>
+
+      <div class="indicadores">
+        <div class="indicador">
+          <span>Pacientes ativos</span>
+          <strong id="total-pacientes">0</strong>
+        </div>
+        <div class="indicador">
+          <span>Tratamentos em andamento</span>
+          <strong id="total-tratamentos">0</strong>
+        </div>
+        <div class="indicador">
+          <span>Alertas críticos</span>
+          <strong id="total-alertas" class="vermelho">0</strong>
+        </div>
+        <div class="indicador">
+          <span>Exames registrados</span>
+          <strong id="total-exames">0</strong>
+        </div>
+      </div>
+
+      <div class="duas-colunas">
+        <div class="cartao">
+          <div class="cartao-titulo">
+            <h3>Pacientes recentes</h3>
+            <button class="botao-link" onclick="trocarTela('pacientes')">Ver todos</button>
+          </div>
+          <div id="lista-recentes"></div>
+        </div>
+
+        <div class="cartao">
+          <div class="cartao-titulo">
+            <h3>Alertas importantes</h3>
+          </div>
+          <div id="lista-alertas"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tela-pacientes" class="tela">
+      <div class="cabecalho-tela">
+        <div>
+          <h2>Cadastro de pacientes</h2>
+          <p>Registre e consulte os dados dos pacientes.</p>
+        </div>
+        <button class="botao" onclick="novoPaciente()">Cadastrar paciente</button>
+      </div>
+
+      <div class="filtros">
+        <input id="busca-pacientes" type="text" placeholder="Buscar por nome, CPF ou código" oninput="renderPacientes()">
+        <select id="filtro-pacientes" onchange="renderPacientes()">
+          <option value="ativos">Pacientes ativos</option>
+          <option value="todos">Todos os pacientes</option>
+        </select>
+      </div>
+
+      <div class="tabela-caixa">
+        <table>
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>CPF</th>
+              <th>Telefone</th>
+              <th>Convênio</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-pacientes"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="tela-prontuarios" class="tela">
+      <div class="cabecalho-tela">
+        <div>
+          <h2>Prontuários eletrônicos</h2>
+          <p>Histórico médico e observações de cada paciente.</p>
+        </div>
+      </div>
+
+      <div class="filtros">
+        <input id="busca-prontuarios" type="text" placeholder="Buscar por nome ou CPF" oninput="renderProntuarios()">
+      </div>
+
+      <div id="lista-prontuarios" class="grade"></div>
+    </section>
+
+    <section id="tela-tratamentos" class="tela">
+      <div class="cabecalho-tela">
+        <div>
+          <h2>Planos de tratamento</h2>
+          <p>Acompanhe e atualize os tratamentos dos pacientes.</p>
+        </div>
+        <button class="botao" onclick="novoTratamento()">Novo tratamento</button>
+      </div>
+
+      <div id="lista-tratamentos" class="grade"></div>
+    </section>
+
+    <section id="tela-exames" class="tela">
+      <div class="cabecalho-tela">
+        <div>
+          <h2>Exames e resultados</h2>
+          <p>Resultados vinculados ao prontuário do paciente.</p>
+        </div>
+        <button class="botao" onclick="novoExame()">Registrar exame</button>
+      </div>
+
+      <div id="lista-exames" class="tabela-caixa"></div>
+    </section>
+
+    <section id="tela-arquivo" class="tela">
+      <div class="cabecalho-tela">
+        <div>
+          <h2>Arquivo médico</h2>
+          <p>Registros arquivados, mantidos para consulta.</p>
+        </div>
+      </div>
+
+      <div id="lista-arquivo" class="tabela-caixa"></div>
+    </section>
+
+    <footer>
+      <span>LifeCare · Cuidado contínuo, história completa.</span>
+      <span>Protótipo acadêmico — dados fictícios</span>
+    </footer>
+  </main>
+
+  <div id="modal-paciente" class="fundo">
+    <div class="modal">
+      <div class="modal-topo">
+        <h2 id="titulo-modal-paciente">Novo paciente</h2>
+        <button class="fechar" onclick="fecharModal('modal-paciente')">×</button>
+      </div>
+
+      <form id="form-paciente">
+        <input type="hidden" id="p-id">
+
+        <h4>Dados pessoais</h4>
+        <div class="campos">
+          <label class="largo">Nome completo *
+            <input id="p-nome" type="text" required maxlength="100">
+          </label>
+          <label>CPF *
+            <input id="p-cpf" type="text" required maxlength="14" placeholder="000.000.000-00">
+          </label>
+          <label>Data de nascimento *
+            <input id="p-nascimento" type="date" required>
+          </label>
+          <label>Telefone
+            <input id="p-telefone" type="text" placeholder="(00) 00000-0000">
+          </label>
+          <label>E-mail
+            <input id="p-email" type="email">
+          </label>
+          <label class="largo">Endereço
+            <input id="p-endereco" type="text">
+          </label>
+          <label>Convênio
+            <input id="p-convenio" type="text" placeholder="Particular ou nome do convênio">
+          </label>
+          <label>Status
+            <select id="p-status">
+              <option>Ativo</option>
+              <option>Internado</option>
+              <option>Em acompanhamento</option>
+            </select>
+          </label>
+        </div>
+
+        <h4>Informações médicas</h4>
+        <div class="campos">
+          <label class="largo">Alergias conhecidas
+            <textarea id="p-alergias" rows="2" placeholder="Descreva as alergias ou escreva Nenhuma conhecida"></textarea>
+          </label>
+          <label class="largo">Histórico médico
+            <textarea id="p-historico" rows="3"></textarea>
+          </label>
+          <label class="largo">Observações médicas
+            <textarea id="p-observacoes" rows="3"></textarea>
+          </label>
+        </div>
+
+        <div class="modal-rodape">
+          <button type="button" class="botao secundario" onclick="fecharModal('modal-paciente')">Cancelar</button>
+          <button type="submit" class="botao">Salvar paciente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-prontuario" class="fundo">
+    <div class="modal">
+      <div class="modal-topo">
+        <div>
+          <span class="etiqueta">PRONTUÁRIO ELETRÔNICO</span>
+          <h2 id="titulo-prontuario"></h2>
+        </div>
+        <button class="fechar" onclick="fecharModal('modal-prontuario')">×</button>
+      </div>
+      <div id="conteudo-prontuario"></div>
+    </div>
+  </div>
+
+  <div id="modal-tratamento" class="fundo">
+    <div class="modal pequeno">
+      <div class="modal-topo">
+        <h2 id="titulo-modal-tratamento">Novo tratamento</h2>
+        <button class="fechar" onclick="fecharModal('modal-tratamento')">×</button>
+      </div>
+
+      <form id="form-tratamento">
+        <input type="hidden" id="t-id">
+        <div class="campos">
+          <label class="largo">Paciente
+            <select id="t-paciente"></select>
+          </label>
+          <label class="largo">Tratamento *
+            <input id="t-nome" type="text" required maxlength="100">
+          </label>
+          <label class="largo">Descrição e orientações
+            <textarea id="t-descricao" rows="3"></textarea>
+          </label>
+          <label class="largo">Status
+            <select id="t-status">
+              <option>Em andamento</option>
+              <option>Concluído</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="modal-rodape">
+          <button type="button" class="botao secundario" onclick="fecharModal('modal-tratamento')">Cancelar</button>
+          <button type="submit" class="botao">Salvar tratamento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-exame" class="fundo">
+    <div class="modal pequeno">
+      <div class="modal-topo">
+        <h2 id="titulo-modal-exame">Registrar exame</h2>
+        <button class="fechar" onclick="fecharModal('modal-exame')">×</button>
+      </div>
+
+      <form id="form-exame">
+        <input type="hidden" id="e-id">
+        <div class="campos">
+          <label class="largo">Paciente
+            <select id="e-paciente"></select>
+          </label>
+          <label>Exame *
+            <input id="e-nome" type="text" required maxlength="100">
+          </label>
+          <label>Data *
+            <input id="e-data" type="date" required>
+          </label>
+          <label class="largo">Resultado
+            <textarea id="e-resultado" rows="3" placeholder="Deixe em branco se o resultado ainda estiver pendente"></textarea>
+          </label>
+        </div>
+
+        <div class="modal-rodape">
+          <button type="button" class="botao secundario" onclick="fecharModal('modal-exame')">Cancelar</button>
+          <button type="submit" class="botao">Salvar exame</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="aviso" class="aviso"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
